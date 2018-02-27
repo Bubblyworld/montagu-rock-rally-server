@@ -1,0 +1,22 @@
+{
+  "name": "montagu-rock-rally-server",
+  "version": "1.0.0",
+  "description": "Server code for the Montagu Rock Rally app.",
+  "main": "index.js",
+  "keywords": [
+    "montagu",
+    "rock",
+    "rally",
+    "app"
+  ],
+  "author": "Guy Paterson-Jones",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.16.2",
+    "express-force-https": "^1.0.0",
+    "helmet": "^3.11.0",
+    "mysql2": "^1.5.2",
+    "passport": "^0.4.0",
+    "sequelize": "^4.34.0"
+  }
+}
