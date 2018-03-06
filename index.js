@@ -31,9 +31,17 @@ require('./src/config/passport.js')(passport, models);
 var app = express();
 app.use(forceHttps);
 app.use(helmet());
-app.use(session({ secret: uuid() }));
+app.use(
+    session({
+        secret: uuid(),
+        resave: false,
+        saveUninitialized: true,
+        cookie: { secure: true }
+    })
+);
 app.use(passport.initialize());
 app.use(passport.session());
+app.set('view engine', 'ejs');
 
 // Routing.
 app.get('/', function(req, res) {
