@@ -12,10 +12,6 @@ var forceHttps = require('express-force-https');
 var sslCertFile = process.env.SSL_CERT;
 var sslKeyFile = process.env.SSL_KEY;
 var sslPass = process.env.SSL_PASS;
-var mysqlHost = process.env.MYSQL_HOST;
-var mysqlDb = process.env.MYSQL_DB;
-var mysqlUser = process.env.MYSQL_USER;
-var mysqlPass = process.env.MYSQL_PASS;
 
 // Grab SSL certificate credentials.
 var sslCert = fs.readFileSync(sslCertFile, 'utf-8');
@@ -26,17 +22,9 @@ var creds = {
     passphrase: sslPass
 };
 
-// Set up a SQL connection.
-var sequelize = new Sequelize(mysqlDb, mysqlUser, mysqlPass, {
-    host: mysqlHost,
-    dialect: 'mysql',
-    operatorsAliases: false
-});
-
-// Set up sequelize models.
+// Set up a SQL connection, create models and config passport.js.
+var sequelize = require('./src/config/database.js');
 var models = require('./src/app/models/models.js')(sequelize);
-
-// Set up passport session and strategy data.
 require('./src/config/passport.js')(passport, models);
 
 // Set up express middleware.
