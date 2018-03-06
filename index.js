@@ -8,10 +8,6 @@ var Sequelize = require('sequelize');
 var session = require('express-session');
 var forceHttps = require('express-force-https');
 
-var initialiseLogin = require('./src/auth/login.js');
-var initialiseModels = require('./src/models/models.js');
-var initialiseSession = require('./src/auth/session.js');
-
 // Grab environment variables.
 var sslCertFile = process.env.SSL_CERT;
 var sslKeyFile = process.env.SSL_KEY;
@@ -38,11 +34,10 @@ var sequelize = new Sequelize(mysqlDb, mysqlUser, mysqlPass, {
 });
 
 // Set up sequelize models.
-var models = initialiseModels(sequelize);
+var models = require('./src/app/models/models.js')(sequelize);
 
 // Set up passport session and strategy data.
-initialiseSession(passport, models);
-initialiseLogin(passport, models);
+require('./src/config/passport.js')(passport, models);
 
 // Set up express middleware.
 var app = express();

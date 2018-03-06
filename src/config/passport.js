@@ -2,6 +2,7 @@ var LocalStrategy = require('passport-local').Strategy;
 var bcrypt = require('bcrypt');
 
 module.exports = function(passport, models) {
+    // Set up login strategy.
     passport.use(
         'login',
         new LocalStrategy(
@@ -24,5 +25,21 @@ module.exports = function(passport, models) {
                     });
             }
         )
-    )
+    );
+
+    // Configure session details.
+    passport.serializeUser((user, done) => {
+        done(null, user.id);
+    });
+
+    passport.deserializeUser((id, done) => {
+        models.User
+            .findById(id)
+            .then(function(user) {
+                done(null, user);
+            })
+            .catch((err) => {
+                done(err);
+            });
+    });
 }
