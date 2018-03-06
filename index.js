@@ -1,10 +1,16 @@
 var fs = require('fs');
 var https = require('https');
+var uuid = require('uuid/v1');
 var helmet = require('helmet');
 var express = require('express');
 var passport = require('passport');
-var forceHttps = require('express-force-https');
 var Sequelize = require('sequelize');
+var session = require('express-session');
+var forceHttps = require('express-force-https');
+
+var initialiseLogin = require('./src/auth/login.js');
+var initialiseModels = require('./src/models/models.js');
+var initialiseSession = require('./src/auth/session.js');
 
 // Grab environment variables.
 var sslCertFile = process.env.SSL_CERT;
@@ -31,16 +37,53 @@ var sequelize = new Sequelize(mysqlDb, mysqlUser, mysqlPass, {
     operatorsAliases: false
 });
 
+// Set up sequelize models.
+var models = initialiseModels(sequelize);
+
+// Set up passport session and strategy data.
+initialiseSession(passport, models);
+initialiseLogin(passport, models);
+
 // Set up express middleware.
 var app = express();
 app.use(forceHttps);
 app.use(helmet());
+app.use(session({ secret: uuid() }));
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Routing.
 app.get('/', function(req, res) {
     res.send('Hello World!');
 });
 
-// Start our server.
-var server = https.createServer(creds, app);
-server.listen(8080);
+// Test login code.
+app.all(
+    '/login',
+    passport.authenticate(
+        'login', {
+            successRedirect: '/protected',
+            failureRedirect: '/'
+        }
+    )
+);
+
+app.get(
+    '/protected',
+    passport.authenticate('session'),
+    function(req, res) {
+        if (req.isAuthenticated())
+            res.send('Successfully authenticated!');
+        else
+            res.send('You aren\'t logged in.');
+    }
+)
+
+// Sync the database and start the server.
+sequelize
+    .sync()
+    .then(() => {
+        https
+            .createServer(creds, app)
+            .listen(8080);
+    });

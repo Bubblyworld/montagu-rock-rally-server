@@ -12,11 +12,15 @@
   "author": "Guy Paterson-Jones",
   "license": "MIT",
   "dependencies": {
+    "bcrypt": "^1.0.3",
     "express": "^4.16.2",
     "express-force-https": "^1.0.0",
+    "express-session": "^1.15.6",
     "helmet": "^3.11.0",
     "mysql2": "^1.5.2",
     "passport": "^0.4.0",
-    "sequelize": "^4.34.0"
+    "passport-local": "^1.0.0",
+    "sequelize": "^4.34.0",
+    "uuid": "^3.2.1"
   }
 }
