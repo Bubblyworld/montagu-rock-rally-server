@@ -1,10 +1,12 @@
 var fs = require('fs');
+var path = require('path');
 var https = require('https');
 var uuid = require('uuid/v1');
 var helmet = require('helmet');
 var express = require('express');
 var passport = require('passport');
 var Sequelize = require('sequelize');
+var bodyParser = require('body-parser');
 var session = require('express-session');
 var forceHttps = require('express-force-https');
 
@@ -41,11 +43,15 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(bodyParser.urlencoded({ extended: false }));
+
+// Set up view engine.
+app.set('views', path.join(__dirname, '/src/views'));
 app.set('view engine', 'ejs');
 
 // Routing.
 app.get('/', function(req, res) {
-    res.send('Hello World!');
+    res.render('index.ejs');
 });
 
 // Test login code.
