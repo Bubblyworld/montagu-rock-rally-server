@@ -1,7 +1,7 @@
 var Sequelize = require('sequelize');
 
 module.exports = function(sequelize, User, Route) {
-    return sequelize.define('send', {
+    var Send = sequelize.define('send', {
         id: {
             type: Sequelize.INTEGER,
             primaryKey: true,
@@ -9,21 +9,12 @@ module.exports = function(sequelize, User, Route) {
         },
 
         style: Sequelize.INTEGER, /*onsight, redpoint etc*/
-
-        sender_id: {
-            type: Sequelize.INTEGER,
-            references: {
-                model: User,
-                key: 'id'
-            }
-        },
-
-        route_id: {
-            type: Sequelize.INTEGER,
-            references: {
-                model: Route,
-                key: 'id'
-            }
-        }
+        sender_id: Sequelize.INTEGER,
+        route_id: Sequelize.INTEGER
     });
+
+    Send.belongsTo(User, { foreignKey: 'sender_id' });
+    Send.belongsTo(Route, { foreignKey: 'route_id' });
+
+    return Send;
 }

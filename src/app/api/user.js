@@ -3,6 +3,9 @@ module.exports = function(models, user_id, callback) {
     models.User
         .findById(user_id)
         .then((user) => {
+            if (!user)
+                return callback("No user found.");
+
             var data = {
                 id: user.id,
                 name: user.name,
