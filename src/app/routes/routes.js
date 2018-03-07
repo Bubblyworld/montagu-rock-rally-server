@@ -1,7 +1,15 @@
 var express = require('express');
-var router = express.Router();
 
-router.use('/api', require('./api_routes.js'));
-router.use('/', require('./auth_routes.js'));
+module.exports = function(models) {
+    var router = express.Router();
 
-module.exports = router;
+    router.use('/api', require('./api_routes.js')(models));
+    router.use('/', require('./auth_routes.js')(models));
+
+    // Basic index for now.
+    router.get('/', function(req, res) {
+        res.render('index.ejs');
+    });
+
+    return router;
+}

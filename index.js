@@ -50,10 +50,7 @@ app.set('views', path.join(__dirname, '/src/views'));
 app.set('view engine', 'ejs');
 
 // Routing.
-app.use('/', require('./src/app/routes/routes.js'));
-app.get('/', function(req, res) {
-    res.render('index.ejs');
-});
+app.use('/', require('./src/app/routes/routes.js')(models));
 
 // Sync the database and start the server.
 sequelize
