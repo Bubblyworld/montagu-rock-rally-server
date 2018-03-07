@@ -50,31 +50,10 @@ app.set('views', path.join(__dirname, '/src/views'));
 app.set('view engine', 'ejs');
 
 // Routing.
+app.use('/', require('./src/app/routes/routes.js'));
 app.get('/', function(req, res) {
     res.render('index.ejs');
 });
-
-// Test login code.
-app.all(
-    '/login',
-    passport.authenticate(
-        'login', {
-            successRedirect: '/protected',
-            failureRedirect: '/'
-        }
-    )
-);
-
-app.get(
-    '/protected',
-    passport.authenticate('session'),
-    function(req, res) {
-        if (req.isAuthenticated())
-            res.send('Successfully authenticated!');
-        else
-            res.send('You aren\'t logged in.');
-    }
-)
 
 // Sync the database and start the server.
 sequelize
