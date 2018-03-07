@@ -14,11 +14,19 @@ module.exports = function(models) {
         )
     );
 
+    router.all(
+        '/logout',
+        (req, res) => {
+            req.logout();
+            res.redirect('/');
+        }
+    )
+
     // Test the auth code.
     router.get(
         '/protected',
         passport.authenticate('session'),
-        function(req, res) {
+        (req, res) => {
             if (req.isAuthenticated())
                 res.send('You are logged in as: ' + req.user.name);
             else
