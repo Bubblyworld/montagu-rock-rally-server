@@ -7,9 +7,6 @@ module.exports = function(passport, models) {
         'login',
         new LocalStrategy(
             function(username, password, done) {
-                console.log("TEST");
-                console.log(username);
-                console.log(password);
                 models.User
                     .findOne({ where: { name: username } })
                     .then(user => {
