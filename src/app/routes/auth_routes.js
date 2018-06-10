@@ -6,12 +6,17 @@ module.exports = function(models) {
 
     router.post(
         '/login',
-        passport.authenticate(
-            'login', {
-                successRedirect: '/protected',
-                failureRedirect: '/'
-            }
-        )
+        function(req, res, next) {
+            passport.authenticate(
+                'login',
+                function(err, user, info) {
+                    console.log(err);
+                    return res.json({
+                        success: user ? true : false
+                    });
+                }
+            )(req, res, next);
+        }
     );
 
     router.all(

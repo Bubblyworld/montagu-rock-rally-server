@@ -45,6 +45,13 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(bodyParser.urlencoded({ extended: false }));
 
+// // Enable CORS.
+// app.use(function(req, res, next) {
+//     res.header("Access-Control-Allow-Origin", "*");
+//     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+//     next();
+// });
+
 // Set up view engine.
 app.set('views', path.join(__dirname, '/src/views'));
 app.set('view engine', 'ejs');
@@ -58,5 +65,5 @@ sequelize
     .then(() => {
         https
             .createServer(creds, app)
-            .listen(8080);
+            .listen(8081);
     });
